@@ -1,5 +1,5 @@
+#include <stdio.h>
 #include "template.h"
-#include "keyboard.h"
 #include <math.h>
 
 /* prototype / table of code */
