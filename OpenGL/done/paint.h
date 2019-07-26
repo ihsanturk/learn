@@ -1,4 +1,6 @@
-#include "template.h"
+/*
+ * paint.h
+ */
 
 /* prototype / table of code */
 /* vars */

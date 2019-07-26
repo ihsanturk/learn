@@ -1,16 +1,16 @@
-#include "template.h"
+/*
+ * build_circle.h
+ */
+
 #include <stdio.h>
 #include <math.h>
 #ifndef M_PI
 #  define M_PI 3.14159265358979323846
 #endif
 
-/* var */
-int WINDOW_WIDTH = 1366;
-int WINDOW_HEIGHT  = 768;
-
-int WIDTH = 700;
-int HEIGHT = 700;
+/* Var */
+#define WIDTH 700
+#define HEIGHT 700
 
 int x;
 int y;
@@ -22,17 +22,15 @@ float speed = M_PI;
 float velocity = 1e-4;
 float acceleration = 1e-6;
 
+#define SETUP_EXIST
 void
 setup()
 {
-   glutInitWindowSize(WIDTH, HEIGHT);
-   glClearColor(0.0, 0.0, 0.0, 1.0); /* r,g,b,a */
    glPointSize(2.0);
 }
-/* ============================================================ */
 
 void
-show()
+draw()
 {
    /* main loop */
    while (speed > 0.001) {
@@ -58,17 +56,6 @@ show()
       }
 
       glEnd();
-      /* printf("Done"); */
       glFlush();
    }
-}
-
-/* ============================================================ */
-int
-main(int argc, char** argv)
-{
-   init(argc, argv, WIDTH, HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT);
-   setup();
-   glutDisplayFunc(show);
-   glutMainLoop();
 }

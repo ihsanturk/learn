@@ -1,6 +1,6 @@
 CC = cc
 LIBS = -lGL -lGLU -lglut -lm
-objects = building_circle draw_graph sin_wave paint
+objects = main
 
 CFLAGS = -std=c99
 
@@ -11,3 +11,6 @@ $(objects): %: %.c
 
 clean:
 	rm -rf $(objects)
+
+run:
+	./$(objects)

@@ -1,3 +1,7 @@
+/*
+ * sin_wave.h
+ */
+
 #include "template.h"
 #include <stdio.h>
 #include <math.h>

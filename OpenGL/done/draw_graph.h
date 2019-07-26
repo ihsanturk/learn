@@ -1,22 +1,10 @@
+/*
+ * draw_graph.h
+ */
 #include <stdio.h>
-#include "template.h"
 #include <math.h>
 
-/* prototype / table of code */
-
-/* variables */
-void draw();
-void showkeyInfo();
-void keyboard(unsigned char, int, int);
-/* main */
-
-
-/* ============================================================ */
-
-
-/* GLOBAL VAR */
-int WINDOW_WIDTH = 1366;
-int WINDOW_HEIGHT  = 768;
+/* Var */
 int WIDTH = 700;
 int HEIGHT = 700;
 
@@ -145,17 +133,4 @@ keyboard(unsigned char key, int x, int y)
 			draw();
 			break;
 	}
-}
-
-
-int
-main(int argc, char** argv)
-{
-	showkeyInfo();
-	init(argc, argv, WIDTH, HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-	glutDisplayFunc(draw);
-	glutKeyboardFunc(keyboard);
-
-	glutMainLoop();
 }
