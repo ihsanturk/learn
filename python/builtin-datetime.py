@@ -12,18 +12,19 @@ formatter = '%Y-%m-%d %H:%M:%S %z'
 format_wo_timezone = '%Y-%m-%d %H:%M:%S'
 
 now = lambda: datetime.now(timezone.utc)
-print(f'now: {now()}')
+print(f'1. now: {now()}')
+print(f'2. now: {now().strftime(format_wo_timezone)}')
 
-print(datetime(2000, 1, 1, 0, 0, 0)) # this is UTC by default
+print('3.', datetime(2000, 1, 1, 0, 0, 0)) # this is UTC by default
 
 dateobject = datetime.strptime(mydate, formatter)
-print(dateobject)
+print('4.', dateobject)
 
 dateobject_as_utc = dateobject.astimezone(tz=timezone.utc)
-print(dateobject_as_utc)
+print('5.', dateobject_as_utc)
 
 dateobject_as_utc_wo_timezone = dateobject_as_utc.strftime(format_wo_timezone)
-print(dateobject_as_utc_wo_timezone)
+print('6.', dateobject_as_utc_wo_timezone)
 
 # print(dateobject.timetuple())
 # print(dateobject_as_utc.timetuple())
