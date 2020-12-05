@@ -15,23 +15,24 @@ Language: TR, Turkish
   üretmiş olduğu entegreler germanyum kullanılıyordu.
 - Sonrasında silikon kullanılmaya başlandı.
 - Günümüzde (2020-12) entegreler 5 nanometreye geldi.
-- Ilk entegre bilgisayar islemcisi, 1970 yiliinda uretilen 4004'tur.
+- İlk entegre bilgisayar işlemcisi, 1970 yılında üretilen 4004'tur.
 
 ### TTL ve CMOS Entegreler
 TTL ve CMOS entegrelerin lojik 1 ve 0 için kullandığı gerilim eşikleri
 farklıdır. Yani arasındaki fark "bant seviyesidir". CMOS daha az enerji kullanır.
+
+
 (nanometre: metrenin milyarda biri)
 
 ### Mikroişlemci, Mikrokontrolcü, Mikrobilgisayar
 Isı en mikroişlemciler için en büyük düşmandır.
-Mikrodenetleyici
 
 ### Chip Üretimi
 Silicon elementinde bir elektron özgürce dolaşabilir oluyor (p kondüktif).
 
 ### Geçmiş CPU'lar
 Intel 8086 günümüzdekilere benzer ilk chip'ti. Günümüzde Intel ve AMD en büyük
-çip üreticilerinden biri. 4-5 ayda bir yeni bir chip çıkıyor. 1 MB RAM
+çip üreticilerinden ikisidir. 4-5 ayda bir yeni bir chip çıkıyor. 1 MB RAM
 takılabiliyordu. 8086'dan günümüzdeki i7'ye komut sayısı, hızı, vs. arttırıldı.
 
 ### Türkiye Çip Üretiyor
@@ -99,7 +100,7 @@ Programla sürülen saat modlu ardışıl bir devredir.
    ve bir bellekten oluşur. BUS, CPU ve Bellek arasındaki etkileşimi sağlar.
 
 ### BUS
-CPU ve diğer birimler arasındaki adres, veri ve koontrol sinyalleriniiin
+CPU ve diğer birimler arasındaki adres, veri ve kontrol sinyallerinin
 etkileşimini sağlayan hatlardır, yollardır. Adres, Veri ve Kontrol Yolu olmak
 üzerek üç farklı BUS vardır.
 
@@ -108,15 +109,17 @@ Verinin okunacağı veya verinin yazılacacğı adres bölgesini temsil eden
 bilgilerin taşınmasında kullanılan hatlar, adres syolu olarak isimlendirilir.
 Adres yolu, yek yönüldür ve paralel iletişim sağlayacak yapıdadır. Bir tek BUS
 bir CPU tarafından sürülüp birçok cihaz tarafından kullanılabilir. Tüm
-elemanlara aynı hat ile bağlıdır. Yani işlem yapılacak çiği seçmek için
+elemanlara aynı hat ile bağlıdır. Yani işlem yapılacak çipi seçmek için
 kullanılırlar.
 
 
 Mikroişlemcinin adresleme kapasitesini belirler. Yeni kullanılabilecek _hafıza
-(ram) miktarını belirler_. 2^nŞ n adres hat sayısıdır.
+(ram) miktarını belirler_. 2^n adres hat sayısıdır.
 
 
 20 bit adres hattı varsa 2^20 = 1MB hafızayı destekler
+
+
 30 bit adres hattı varsa 2^30 = 1GB hafızayı destekler
 
 ### Data BUS (Veri Yolu)
@@ -125,13 +128,13 @@ kullanılan çift yönlü hatlar, veri yolu olarak adlandırılır.
 
 
 Mikroişlemciler veri yolu genişliğine göre isimlendirilirler; 8 bit, 16 bit, 32
-bit, 64 bit işlemci vsb. Veri yolu genişliği, mikroişlemcinin aynı anda
+bit, 64 bit işlemci vb. Veri yolu genişliği, mikroişlemcinin aynı anda
 işleyebileceği veri sayısını belirler.
 
 ### Kontrol BUS (Kontrol Yolu)
-Mikroişlemcili sistemde bulunan birimler arasındaki iliişkiyi düzenleyen
+Mikroişlemcili sistemde bulunan birimler arasındaki ilişkiyi düzenleyen
 sinyallerin (yazma, okuma, interrupt. vb.) iletilmesi amacıyla kullanılan
-hatlar, kontrol yolu olarak adlandırılır.
+hatlar, "kontrol yolu" olarak adlandırılır.
 
 ### Giriş Çıkı Arayüz Elemanlar:
 Sistem ile dış dünya arasındaki etkileşimin sisteme bazı eklemelerin yapılması
@@ -145,7 +148,7 @@ gönerilir.
 
 ### Sayıcılar (Counters):
 Program komut (instruction) adresi ve yığın (stack) adresi gibi bilgileri
-saklayan geçici, dahili haaafıza elemanlarıdır.
+saklayan geçici, dahili hafıza elemanlarıdır.
 
 ### DMA (Direct Memory Access)
 Doğrudan hafıza erişimidir. DMA denetleyici çipi tarafından yapılır. Hızlı
@@ -154,12 +157,12 @@ sonucunda CPU'yu devre dışı ırakıp BUS'ları teslim alır ve harici cihaza 
 hızlı erişilmesini sağlar.
 
 ### APU (Arithmetic Processing Unit)
-Aritmetik işlemci birimi. CPU'şar sadece alınan emirlerin icrası ile
-ilgilenirler. Aritmetik işlemciler iiise emirlerin icrası sırasında gerekli
+Aritmetik işlemci birimi. CPU'lar sadece alınan emirlerin icrası ile
+ilgilenirler. Aritmetik işlemciler ise emirlerin icrası sırasında gerekli
 olan aritmetik işlemleri yapabilen co-processor'lerdir. CPU'ya yardımcı
 olduklarından hızı arttırırlar.
 
-### CO-PROCESSOR (Yardımcı İşşlemci)
+### CO-PROCESSOR (Yardımcı İşlemci)
 Birincil işlemcinin (CPU) işleivlerini tanımlamak için kullanılan bir
 bilgisayar işlemcisidir. Kendi belleği vardır.  Yardımcı işlemci tarafından
 gerçekleştirilen işlemler, kaya nokta aritmetiği, grafikler, sinyal işleme,
@@ -172,15 +175,15 @@ kaydedicilere gönderir.
 
 ### Kontrol Birimi
 Kontrol emir kaydedicinin içeriği ile sürülür ve emir kaydedicisinin kodu bu
-birim tarafından çözülür. Yani komutların çözümlendiği birim.
+birim tarafından çözülür. Yani komutların çözümlendiği birimdir.
 
 Bellekten alınan emir kodları CPU'nun içinde bulunan Kontrol Birimi Ünitesinde
 daha küçük ve basit mikro emir kodlarına çözülür ve ne iş için kullanılacağı
-anlaşılır. Emir kodları bu şekiilde basit mikro emir kodları yardımıyle icra
+anlaşılır. Emir kodları bu şekilde basit mikro emir kodları yardımıyle icra
 edilir.
 
-Program belleğe ilk erişimde her zaman ilk kodun emir olduğu varsayılır. Ayrıca
-her bir emir icrası tamamlandıktan sonra, program bellekteki bir sonraki kod
+Programın belleğe ilk erişiminde her zaman ilk kodun emir olduğu varsayılır. Ayrıca
+her bir emir icrası tamamlandıktan sonra, bellekteki bir sonraki kod
 yine CPU tarafından emir kodu olarak algılanır.
 
 Yani CPU her emir icrasından sonra tekrar emir bekler.
