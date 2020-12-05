@@ -4,7 +4,7 @@ Date: 1607180004
 Language: TR, Turkish
 ---
 
-# Mikroişlemciler & Mikroişlemciler
+# Mikroişlemciler & Mikro Denetleyiciler
 
 ## Tanıtım (`up_ders_1*.mp4`)
 - ENIAC
