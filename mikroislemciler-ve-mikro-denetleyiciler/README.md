@@ -1,6 +1,8 @@
+---
 Author: ihsan
 Date: 1607180004
 Language: TR, Turkish
+---
 
 # Mikroişlemciler & Mikroişlemciler
 
@@ -296,42 +298,42 @@ __-/       \_____/     |
 |                |
 ```
 #### Pinler
-##### ALE
+##### `ALE`
 Address Latch Enable (Adres Tutma Aktif): Lojik 1 seviyesi ile işlemcinin Adres
 / Veri yolunda adres bilgisinin olduğunu gösterir.
-##### !(BHE) / `S_7`
+##### `!(BHE) / S_7`
 Bus High Enable (Yol Yüksek Aktif): 8086 işlemcisinde, bir okuma veya yazma
 çevriminde, veri yolunun üst 8-bitinin (`D_15` - `D_8`) aktif olduğunu dış
 lojiğe bildirir.
-##### M/!(IO)
+##### `M/!(IO)`
 Memory or Input / Output: Lojik 0 olduğunda mikroişlemcinin bir I/O cihazı ve
 lojik 1 olduğunda hafıza modülü üzerinde işlem yaptığını dış lojiğe bildirir.
-##### !(RD)
+##### `!(RD)`
 Okuma: Lojik 0 olduğunda mikroişlemcinin hafızadan bir hafıza veya I/O cihazına
 bir veri yazdığını belirtir.
-##### !(WR)
+##### `!(WR)`
 Yazma: Lojik 0 olduğunda mikroişlemcinin hafızadan bir hafıza veya I/O cihazına
 bir veri yazdığını belirtir.
-##### !(DEN)
-##### READY
+##### `!(DEN)`
+##### `READY`
 Hazır
-##### INTR
+##### `INTR`
 Interrupt Request. Donanım kesmesi için kullanılır. Kesme bayrağı 1 olduğunda
 INTR giriş lojik 1 yapılırsa x86 işlemcisi bir dış donanım kesmesi almış olur
 ve bunun neticesi, o an 
-##### !(INTA)
+##### `!(INTA)`
 Interrupt Acknowledge
-##### NMI
+##### `NMI`
 Nonmaskable Interrupt: Kesme bayrağı bitinin 1 olmasını gerektirmez.
-##### RESET
-##### MN /MX
+##### `RESET`
+##### `MN /MX`
 Minimum / Maximum mode
-##### HOLD
-##### HLDA
-Hold Acknowledge (tutme tasdik).
-##### CLK
-##### VCC
-##### GND
+##### `HOLD`
+##### `HLDA`
+Hold Acknowledge (tutma tasdik).
+##### `CLK`
+##### `VCC`
+##### `GND`
 Toprak
 
 ### İç Mimari
@@ -344,11 +346,13 @@ BIU hafıza ve Giriş/Çıkış işlemleri dahil bütün dış yol işlemlerinde
 sorumludur.
 
 #### Kaydediciler (Registers) (`up_ders_4a.mp4`)
-Scheme was here
+```
 ╭──────╮
 │──────│
 │ ⎣⎦⎡⎤ │
 ╰──────╯
+```
+[Scheme was here]
 
 ##### Genel Amaçlı Kaydediciler
 - AX: Akümülatör (accumulator)
@@ -381,8 +385,10 @@ ve kod segmentin offset adresini tutar.
 
 ##### Flags (Bayrak Kaydedici)
 Uyarı bitleridir.
+```
 |15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0|
 |  |  |  |  |O |D |I|T|S|Z| |A| |P| |C|
+```
 - C (Carry): Bir işaretsiz sayının aritmetik işleminde, toplamadan sonraki
   eldeyi (carry) veya çıkarmadan sonraki ödüncü (borrow) belirtir.
 - P (Parity): Tek eşlik (odd parity) işlemi, lojik 0; çift eşlik (even parity)
@@ -456,9 +462,11 @@ Hafızanın 5A000h adresinden başlayarak 2 tane 2kB'lık RAM yerleştiriniz
 
 Cevap:
 RAM'in kaç bit (dahili) adres hattı olduğunu bulalım.
+```
 2k = 2^n
 k = 2^10
 2^1*2^10 = 2^n => n = 11 bulunur
+```
 
 ## Bilgisayar Mimarileri (`up_ders_5b_ciscrisc.mp4`)
 1. Mikroişlemci Yapısal Tasarım Mimarisi
@@ -626,7 +634,7 @@ periyodu ise birden çok saat periyodundan oluşmaktadır.
 
 | Getir|Kod|Çöz |Yürüt   | Getir|Kod|Çöz |Yürüt   |
 |------------------------|------------------------|
-| K  o  m  u  t  N       |    K o m u t  N + 1    |
+| K  o  m  u  t     N    |    K o m u t  N + 1    |
 
 \_______________________/ \______________________/
       Komut Cycle'ı            Komut Cycle'ı
@@ -656,48 +664,48 @@ Her 8 bite bir rakam koyulur.
 - Köşeli parantez hafızanın adresi anlamına gelir. Örnek: `[CX]`
 
 ### Veri Komutları
-#### MOV <alici>, <verici>
-#### XCHG <opr1>, <opr2>
+#### `MOV <alici>, <verici>`
+#### `XCHG <opr1>, <opr2>`
 Icerikleri yer degistirir.
-#### XLAT
+#### `XLAT`
 DS:BX adresindeki dizi içerisinden n. elemanı bulur. AL=n konularak komut işletilir.
-#### PUSH <gonderici>
+#### `PUSH <gonderici>`
 Stackteki 16 bit gönderici, değeri stack içine aktarılr. SP değeri 2 azalır.
 DS:BX adresindeki dizi içerisinden n. elemanı bulur. AL=n konularak komut işletilir.
-#### POP <alici>
+#### `POP <alici>`
 Stackteki 16 bit değer, alıcı içine aktarılr. SP değeri 2 artar.
 ```as
 POP AX
 ```
 Stackteki 16 bit değer
-#### IN AL, IPORT
+#### `IN AL, IPORT`
 IPORT"tan 8 bit veri AL'ye okunur.
-#### IN AX, IPORT
+#### `IN AX, IPORT`
 IPORT'tan 16-bit veri AX'e okunur.
-#### OUT OPORT, AL
+#### `OUT OPORT, AL`
 AL'nin içeriği OPORT'a gönderilir.
-#### OUT OPORT, AX
+#### `OUT OPORT, AX`
 AX'nin içeriği OPORT'a gönderilir.
-#### LEA AX, <SUBADR>
+#### `LEA AX, <SUBADR>`
 AX SUBADR'nin Ofset adresiyle yüklenir.
-#### LDS DI, LIST
+#### `LDS DI, LIST`
 DI, LIST'in  Ofset adresiyle yüklenir ve DS, LIST'in Segment adres ile
 yüklenir.
-#### LES BX, VEC1
+#### `LES BX, VEC1`
 BX, VEC1'in Ofset adresiyle yüklenir ve ES, VEC1'in Segment adres ile yüklenir.
-#### LAHF
+#### `LAHF`
 Flag saklayıcısının düşük 8-bitini AH saklayıcısına yükler.
-#### SAHF
+#### `SAHF`
 AH saklayıcısını, Flag saklayıcısının düşük 8-bitine yükler.
-#### PUSHF
+#### `PUSHF`
 Flag saklayıcısının değerini stack'e saklar. SP değeri 2 azalır.
-#### POPF
+#### `POPF`
 Stack"teki 16 bir değer, flag saklayıcısına alınır. SP değeri 2 artar.
 
 ### Dört İşlem Komutları
-#### ADD <alici>, <verici>
+#### `ADD <alici>, <verici>`
 Eldesiz toplamadır.
-#### ADC <alici>, <verici>
+#### `ADC <alici>, <verici>`
 Eldeli toplamadır.
-#### SUB <alici>, <verici>
+#### `SUB <alici>, <verici>`
 Eldesiz çıkarmadır.
