@@ -232,7 +232,7 @@ BIOS tutulur. Elektrik gitmesinden etkilenmez. Silinmeme özelliği vardır.
 **73000h ile 73FFFh adresleri arasına gelecek şekilde 4kB RAM bağlantısı yapınız.**
 
 
-RAM'ın adress hat sayısını 4k = 2^n formülü ile bulabiliriz. Burada k = 1024 =
+RAM'ın address hat sayısını 4k = 2^n formülü ile bulabiliriz. Burada k = 1024 =
 2^10 dur.
 
 
@@ -712,3 +712,174 @@ Eldesiz toplamadır.
 Eldeli toplamadır.
 #### `SUB <alici>, <verici>`
 Eldesiz çıkarmadır.
+
+
+## Veri Adresleme Modları
+### Saklayıcı Adresleme (Register Addressing):
+|Assembly Dili|Yapılan İşlem|
+|---|---|
+|`MOV AH,BH`|`BH`, `AL`'ye kopyalanır.|
+|`MOV DH,AL`|`AL`, `DH`'ye kopyalanır.|
+|`MOV AX,DX`|`DX`, `AX`'e kopyalanır.|
+|`MOV SP,BP`|`BP`, `SP`'ye kopyalanır.|
+|`MOV DS,AX`|`AX`, `DS`'ye kopyalanır.|
+|`MOV DI,SI`|`SI`, `DI`'ye kopyalanır.|
+|`MOV BX,DS`|`DS`, `BX`'e kopyalanır.|
+|---|---|
+|`MOV ES,DS`|İzin verilmez (Segment'ten segmente)|
+|`MOV AL,BX`|İzin verilmez (Boyutlar farklı)|
+|`MOV CS,AX`|İzin verilmez (`CS` hedef olamaz)|
+
+* Komutlarda 8-bit ve 16-bit saklayıcılar karışık olarak kullanılamaz.
+* Bir segment saklayıcısından diğer bir segment saklayıcısına adres aktarımı
+  için `MOV` komutu kullanılamaz.
+* Ayrıca, bir `CS` saklayıcısı, `MOV` komutu ile değiştirilemez.
+* (Daha önce de belirtildiği gibi yürütülecek bir sonraki komutun adresi `CS:IP`
+  çifti tarafından belirlenmekteydi. Eğer ki `CS` değiştirilirse yürütülecek bir
+  sonraki komutun adresi belirsiz olacaktır.)
+
+### İvedi Adresleme (Immediate Addresing)
+
+Verinin program bellekte hexadecimal opcode içinde (`CS` içerisinde) yer aldığı
+moddur. Yani veri bellekte işlem kodunu takip eden byte veya byte'larda yer
+alır.
+
+|Assembly Dili|Yapılan İşlem|
+|---|---|
+|`MOV AL, 23`|Ondalık 23 `AL`'ye kopyalanır.|
+|`MOV BX,77H`|77h `BX`'e kopyalanır.|
+|`MOV CH, 100 `|100(64h) `CH`'ye kopyalanır.|
+|`MOV AL,'A'`|A karakterinin ASCII kod karşılığı `AL`'ye kopyalanır. (41h)|
+|`MOV BX, 'AB'`|A ve B karakterlerinin ASCII kod karşılığı `BX`'e kopyalanır. (4241h)|
+|`MOV CL, 10101001B`|İkili 10101001 verisi `CL`'ye kopyalanır.|
+
+### Doğrudan Adresleme (Direct Addressing)
+
+Bu şekilde olan yöntemde, veri segmentinde (`DS`) yer alan bir hafıza hücresi
+ile, kaydediciler arasında veri aktarımıdır.
+
+|Assembly Dili|Yapılan İşlem|
+|---|---|
+|`MOV AL,NUMBER1`|`DS`'de bulunan NUMBER1 bellek hücresinin içeriği `AL`'ye kopyalanır.|
+|`MOV AX,NUMBER2`|`DS`'de bulunan NUMBER2 bellek hücresinin içeriği `AX`'e kopyalanır.|
+|`MOVE STORE1,AL`|`AL`'nin içeriği `DS`'de yer alan STORE1 bellek hücresine kopyalanır.|
+|`MOVE STORE2,AX`|`AX`'in içeriği `DS`'de yer alan STORE2 bellek hücresine kopyalanır.|
+|`MOV DH, MEM1`|`DS`'de bulunan MEM1 bellek hücresinin içeriği, DH'ye kopyalanır.|
+|`MOV BL,[2000h]`|`DS`'de bulunan 2000h bellek hücresinin içeriği BL'ye kopyalanır.|
+|`MOV ES,SEGADR`|`DS`'de bulunan SEGADR bellek hücresinin içeriği ES'ye kopyalanır.|
+|`MOV BPMEM,BP`|BP, `DS`'de bulunan BPMEM bellek hücresine kopyalanır.|
+
+### Saklayıcı Dolaylı Adresleme (Indirect Addressing)
+
+Hafızanın herhangi bir yerindeki veri `BX`, `BP`, `DI`, `SI` saklayıcılarıyla
+adreslenir. Bu yolla kullanılan sayklayıcılar mevcut segmentteki offset
+adresleri içermiş olmaktadırlar.
+
+* `BX`, `DI`, `SI` ile saklayıcı dolaylı veya diğer tip adresleme modlarında
+  segment veri segment, yeni `DS`'tir.
+* `BP` kullanılmış ise segment olarak yığın, yani `SS` seçilmiş demektir.
+  Aşağıda saklayıcı dolaylı adreslemeye örnek komut ve yapılan aderslemenin
+  işleyişi gösterilmektedir.
+
+```
+BX = 2000h olsun ve bu saklayıcı ile adreslenen hafıza hücresinded 16 bitlik
+2340h bilgisi olsun.
+
+                                            ╭───────────────╮ DS -> 0100h
+                                            │               │
+                                            │───────────────│
+ MOV AX,[BX] ; işletildiğinde               │               │
+                                            │───────────────│
+                                            │               │  DS: 2000h
+                      ___________________   │───────────────│ \____ ____/
+                     /                   \  │               │      V
+                    /                     \ │───────────────│  DS: 2000h
+                  |/_                      \│      40       │  03000h
+         ┌─────────┐                        │───────────────│
+      AX │ 23 │ 40 │                        │      23       │ DS: 2001h
+         │─────────│                        │───────────────│  03001h
+      BX │ 20 │ 00 │                        │               │
+         └─────────┘                        │───────────────│
+                                            │               │
+                                            ╰───────────────╯
+
+
+[ ] sembolü Assembly dilinde dolaylı adresleme için kullanılır.
+
+Yüksek seviyedeki adresteki bilgiler, yüksek seviyedeki register'lara konulur.
+
+```
+
+|Assembly Dili|Yapılan İşlem|
+|`MOV AL, [BX]`|`DS` alanında bulunan ve `BX` ile adreslenen bir byte, AL'ye kopyalanır.|
+|`MOV [BP], CL`|`CL`, `BP` ile adreslenen `SS` alanındaki hafıza hücresine kopyalanır.|
+|`MOV [DI], BH`|`BH`, `DI` ile adreslenen `DS` alanındaki hafıza hücresine kopyalanır.|
+|`MOV [DI], [BX]`|**Geçersizdir.** Çünkü hafızadan hafızaya kopyaya string komutları dışında izin verilmez.|
+
+Dolayli adresleme kullanırken bazı durumlarda hafızada işaretlenen veri
+uzunluğunun açık olarak belirtilmesi gerekir. Bunun için `BYTE PTR`, `WORD PTR`
+veya `DWORD PTR` derleyici bildirisi kullanılır.
+
+`MOV AX`, [DI] komutunda hedef 16-bit `AX` olduğundan `DS`'de `DI` nın içeriği
+ile ofseti adreslenen veri de 16-bit olacaktır.
+
+`MOV AX, 10h` komutunda ise 10h verisinin ne kadar genişlikte bir hafıza
+alanına yazılacağı belli değildir. Bunun için örneğin;
+```
+MOV BYTE PTR [DI], 10h   ; DI ile 1-byte hafızanın adreslendiği belirlenmiş olur.
+```
+
+### Taban-artı İndis Adresleme (Base Plus Index Addressing)
+Taban saklayıcılarından (`BX` veya `BP`'den) birisi ile bir indis saklayıcısı
+(`DI` veya `SI`) kullanilarak yapılan adreslemedir. Taban saklayıcı çoğu zaman
+bir hafıza dizisinin başlangıç adresini ve indis saklayıcı da dizideki verinin
+göreceli pozisyonunu tutar.
+
+Aşağıdaki tablo, çeşitli kullanım örneklerini göstermektedir.
+
+|Assembly Dili|Yapılan İşlem|
+|---|---|
+|`MOV DX,[BX+DI]`|`DS`'de bulunan ve `BX+DI` toplamı ile adreslenen veri, `DX`'e kopyalanır.|
+|`MOV CL,[BP+SI]`|`SS`'de bulunan ve `BP+SI` toplamı ile adreslenen veri, `CL`'ye kopyalanır.|
+|`MOV [BX+SI],SP`|`SP`, `DS`'de bulunan ve `BX+SI` toplamı ile adreslenen alana kopyalanır.|
+|`MOV [BP+SI],CS`|`CS`, `SS`'de bulunan ve `BP+SI` toplamı ile adreslenen yere kopyalanır.|
+
+
+Aşağıdaki komut örneği `TABLO` veri dizisinin 10 numaralı elemanın 30 numaralı
+pozisyonuna kopyalanması işlemini yerine getirir.
+
+```
+MOV BX,OFFSET TABLO   ; Diziye işaret et, yani ofset başlangıç taban adresini al
+MOV DI,10
+MOV AL,[BX+DI]
+MOV DI,30
+MOV [BX+DI],AL
+```
+
+`BX` sabit taban olarak kalırken, `DI` değişerek veriye işaret etmektedir.
+`MOV AX,[BX+SI]` komutu `MOV AX, [BX][SI]` şeklinde de kullanılabilir.
+
+### Saklayıcı Göreceli Adresleme (Register Relative Addressing)
+
+Hafıza segmentinde bulunan veri, bir taban veya indis saklayıcısına (`BX`, `BP`, `DI`
+veya `SI`) bir değişim değerinin toplanmasıyla adreslenir.
+
+|Assembly Dili|Yapılan İşlem|
+|---|---|
+|`MOV AX,[DI+100]`|`DS` alanında bulunan ve `DI+100` toplamı ile adreslenen veri `AX`'e kopyalanır.|
+|`MOV ARRAY[SI],AL`|`AL`, `DS` alanında bulunan ve `ARRAY+SI` ile adreslenen yere kopyalanır.|
+|`MOV DI, LIST[BX]`|`DS`, alanında bulunan ve `LIST` ile `BX` toplamı ile adreslenen veri `DI`'ya kopyalanır.|
+
+### Taban Göreceli-artı-İndis Adresleme (Base Relative-plus-Index Addressing)
+
+Genellikle iki boyutlu hafıza dizilerinin adreslenmesinde `taban saklayıcı`+`indis
+saklayıcı` + `değişim` adersleri eklenerek kullanılır. Bir taban saklayıcısına
+bir indis saklayıcısının içeriğini eklemenin yanı sıra bir değişim adresi
+(displacement) ekler.
+
+|Assembly Dili|Yapılan İşlem|
+|---|---|
+|`MOV CH,[BX+DI+10]`|`DS` alanında bulunan ve `BX+DI+10` ile ifade edilen yerdeki veriyi `CH`'ye kopyalar.|
+|`MOV AX,FILE[BX+DI]`|`DS`alanında bulunan ve `FILE`, `BX`, `DI` toplamı ile adreslenen veriyi `AX`'e kopyalar.|
+|`MOV LIST[BP+SI+4],AH`|`AH`'nın içeriği, `SS`'te bulunan ve `LIST`, `BP`, `DI` ve 4 toplamı ile adreslenen yere kopyalanır.|
+
