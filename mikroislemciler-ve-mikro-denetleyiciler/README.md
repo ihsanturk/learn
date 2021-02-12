@@ -6,6 +6,8 @@ Language: TR, Turkish
 
 # Mikroişlemciler & Mikro Denetleyiciler
 
+# Mikroişlemciler
+
 ## Tanıtım (`up_ders_1*.mp4`)
 - ENIAC
 
@@ -882,4 +884,322 @@ bir indis saklayıcısının içeriğini eklemenin yanı sıra bir değişim adr
 |`MOV CH,[BX+DI+10]`|`DS` alanında bulunan ve `BX+DI+10` ile ifade edilen yerdeki veriyi `CH`'ye kopyalar.|
 |`MOV AX,FILE[BX+DI]`|`DS`alanında bulunan ve `FILE`, `BX`, `DI` toplamı ile adreslenen veriyi `AX`'e kopyalar.|
 |`MOV LIST[BP+SI+4],AH`|`AH`'nın içeriği, `SS`'te bulunan ve `LIST`, `BP`, `DI` ve 4 toplamı ile adreslenen yere kopyalanır.|
+
+
+# Mikro Denetleyiciler
+Bir bilgisayar içerisinde gereken temel bileşenlerden Hafıza, I/O ünitesinin
+tek bir chip(yonga) üzerinde üretilmiş biçimine denir.
+
+```
+   ╭──────────╮            Veri yolu
+   │          │──────────────────────────────────────╮
+   │          │                                      │
+   │   CPU    │ ╭───╮ ╭───╮ ╭─────╮ ╭───╮ ╭─────────╮│
+   │Genel amac│ │RAM│ │ROM│ │I/O  │ │Tim│ │Seri,para││
+   │li islemci│ │   │ │   │ │Portu│ │er │ │lel,port ││
+   │          │ ╰───╯ ╰───╯ ╰─────╯ ╰───╯ ╰─────────╯│
+   │          │                                      │
+   │          │──────────────────────────────────────╯
+   ╰──────────╯
+            genel amaçlı mikroişlemci sistemi
+```
+
+```
+╭───────────────────────────╮
+│╭────────┬───────┬────────╮│
+││        │       │        ││
+││  CPU   │  RAM  │  ROM   ││
+││        │       │        ││
+│┼────────┼───────┼────────┼│
+││  I/O   │       │  Seri, ││
+││ Portu  │ Timer │Paralel,││
+││        │       │  Port  ││
+│╰────────┴───────┴────────╯│
+╰───────────────────────────╯
+      mikro denetleyici
+```
+
+Mikroişlemci ile kontrol edilebilecek bir sistemi kurmak için en azından şu
+üniteler bulunmalıdır;
+- CPU
+- RAM
+- Giriş/Çıkış ünitesi
+- Bilgi iletim yolları (DATA BUS)
+
+Mikrodenetleyici sisteminde ise;
+- Mikrodenetleyicinin kendisi
+
+---
+
+- Genelde IoT cihazlarında kullanılır.
+- C gibi yüksek seviyedeki dillerde programlanabilmesi.
+- Sistem fiyatlarının ucuz olması.
+
+Belirli bir sürede ele alınan bit sayısına bakılarak mikroişlemcinin güçlü
+olup olmadığı ... (tamamlanmamdı)
+
+## Mikro Deneteleyicilerin Gelişimi
+
+... mikro denetleyiciler aşağıda sıralana çeşitli özelliklere sahiptirler.
+
+- Programlanabilir sayısal paralel giriş / çıkış.
+- Realtime (gerçek zamanlı) olabilmesi.
+
+---
+
+- Sonucta .HEX programlara ihtiyacımız var.
+
+## PIC Mikro Denetleyicilerin Tanıtımı
+
+Neden PIC
+* Piyasada kolay bulunabilmeleri
+* Programlama için gerekli donanımların çok basit olması ve ücretsiz devre
+  şemalarının kolaylıkla bulunabilmesi.
+* Programlama için gerekli olan yazılım geliştirme araçlarının Microchio
+  tarafından ücretsiz olarak sunulması.
+* Sahip olduğu RISC mimarisinin, az sayıda komut ile kolayca programlanmasına
+  olanak sağlaması.
+* Basic, C gibi yüksek seviyeli dillerde programlanmalarını sağlayan
+  ücretli/ücretsiz yazılımların bulunması.
+* Yaygın kullanımın bir sonucu olarak çok miktarda örnek uygulama ve kaynağın
+  bulunması.
+* Microchip tarafından yazılan uygulama notlarının uygulama geliştirmede
+  kolaylıklar sağlaması.
+  DIP kılıf yapısı ile de üretilmesinin kart tasarımında kolaylık sağlaması.
+
+## PIC Mimarisi
+```
+      ╭────────────────────────────────────────────────────────────────╮
+      │ ╭─────────╮                                        ╭─────────╮ │
+      │ │         │/──────────────────────────────────────\│  Veri   │ │
+      │ │   I/O   │                  DATA                  │ Hafiza  │ │
+      │ │   ADC   │\─────────────────╮   ╭────────────────/│         │ │
+      │ │   DAC   │                  │   │                 │   RAM   │ │
+      │ │   PWM   │                  │   │                 │  EPROM  │ │
+      │ │         │                  │   │                 │         │ │
+      │ │         │                   \ /                  │         │ │
+      │ │         │/─────────────╭───────────╮────────────\│         │ │
+      │ │         │    Adres     │           │  Adres      ╰─────────╯ │
+      │ ╰─────────╯\─────────────│           │────────────/            │
+      │                          │    CPU    │             ╭─────────╮ │
+      │                          │ 4,8,16,32 │────────────\│         │ │
+      │                          │    bit    │ Prg Adres   │ Program │ │
+      │ ╭─────────────╮          │           │────────────/│ Hafiza  │ │
+      │ │ Zamanlayici │──────────│           │/────────────│         │ │
+      │ │             │          │           │    Komut    │  Flash  │ │
+      │ ╰─────────────╯          │           │\────────────│         │ │
+      │                          ╰───────────╯             │         │ │
+      │                                │                   │         │ │
+      │                        ╭───────────────╮           ╰─────────╯ │
+      │                        │   Osilatör    │                       │
+      │                        ╰───────────────╯                       │
+      ╰────────────────────────────────────────────────────────────────╯
+           Mikro denetleici sistemi genel iç yapısı blok diyagramı.
+```
+
+### Kod Verimliliği
+### Güvenilirlik
+Tüm komutlar 12 veya 14 bitlik bir program bellek sözcüğüne sığar. Yazılımın,
+programın veri kısmına atlamaya ve veri'yi komut gibi çalıştırmasına gerek
+yoktur. Bu 8 bitlik BUS kullanan ve Harvard mimarisi temelli olmayan mikro
+denetleyicilerde gerçekleşmektedir.
+### Komut Seti
+### Hız
+### Statik İşlem
+PIC tamamıyla statik bir mikroişlemcidir. Başka deyişle saati durdurduğunuzda
+tüm kayıtçı içeriği... (tamamlanmamış cümle)
+### Sürücü Kapasitesi
+### Seçenekler
+### Güvenlik
+### Geliştirme
+1 milyon kere program silinip yüklenebilir.
+
+## PIC Donanım Özellikleri
+* PIC16C5XX ailesi 12-bit komut uzunluğu
+* PIC16FXXX ailesi 14-bit komut uzunluğu
+* PIC17CXXX ailesi 16-bit komut uzunluğu
+* PIC12CXXX ailesi 12-bit/14-bit komut uzunluğu
+
+|Seri Adı|Program Belleği|OTP/FLASH Belleği|EEPROM Belleği|RAM Belleği|ADC
+Kanalı|G/Ç Port|Seri Port|PWM Kanalı|Hız MHz|
+|12XXX|3568 |2048x12 bit |16 |128 |4 (8 bit) |6 | - |-|10|
+|16XXX|14336|8192x14 bit |256|368 |10(12 bit)|52|var|2|24|
+|17XXX|32768|16384x16 bit| - |902 |16(10 bit)|66|var|3|33|
+|18XXX|32768|16384x16 bit| - |1536|8 (10 bit)|34|var|2|40|
+Bir CPU, yonga dışındaki harici ünitelerle veri alışverişini kaç bitle
+yapıyorsa buna veri yolu (DATA BUS) bir sayısı denir. PIC'ler farklı sözcük
+uzunluklarında üretilmelerine rağmen harici veri yolu tüm PIC ailesinde
+8-bittir. Yani bir PIC, I/O portu... (tamamlanmamış)
+
+## PIC16F877
+Genel Özellikleri
+* PIC 16F87X serisi PIC 16CXX ailesinin özelliklerini taşır.
+* PIC- 16FXX de Harvard mimarisi kullanılmıştır. Veri yolu 8 bit genişliğinde,
+  program belleğine program yolu ya da adres yolu (program bus / address bus)
+  denilen 13 bit genişliğindeki diğer bir yolla erişilir. PIC 16F87X de komut
+  kodları (opcode), 14 bittir. 14 bitlik program belleğinin her bir adresi, bir
+  komut koduna (Instruction code/word) karşılık gelir.
+
+```
+    ╭────────────╮Prog adresi╭──────────────────╮Kytç Adresi╭─────────────╮
+    │            │/──────────│                  │──────────\│Özel Amaçlı  │
+    │            │   13 bit  │                  │  8 bit    │kaydediciler │
+    │            │\──────────│                  │──────────/│             │
+    │            │           │                  │           │             │
+    │  Program   │           │       CPU        │           │     +       │
+    │  Hafızası  │           │                  │           │             │
+    │            │   Komut   │                  │   Veri    │Veri Hafızası│
+    │            │──────────\│                  │/─────────\│             │
+    │            │  14 bit   │                  │  8 bit    │             │
+    │            │──────────/│                  │\─────────/│             │
+    ╰────────────╯           ╰──────────────────╯           ╰─────────────╯
+                        PIC 16F877'nin Harvard Mimarisi
+```
+
+* Her komuta bir çevrim süresinde (cycle) erişilir ve komut yazmacına yüklenir.
+  Dallanma komutları dışındaki bütün komutlar, aynı çevrim süresinde
+  çalıştırılırlar. Bu sırada program sayacı, PC bir artar.
+* Dallanma ya da sapma komutları ise, iki ardışık periyotta çalıştırılır ve
+  program sayacı PC, iki arttırılır.
+* RISC mimarisine göre tasarlanmışlardır.
+* Dış mimarisi: 40 pin
+* 35 tane (14-bit uzunluğunda) komuta sahiptir.
+* Clock hızı: 20 MHz olup, bir komut cycle'ı;
+```
+Tcp = 1/(20/4) = 0.2 µsn = 200 nsn
+```
+Yani her komut 4 periyotta işlenir.
+```
+F_cpu = F_kristal / 4
+```
+## PIC 16F87X Dış Mimarisi
+
+```
+                       40-Pin PDIP
+                   ╭──────╮  ╭──────╮
+       MCLR/VPP<──>│      ╰──╯      │<──>RB7/PGD
+        RA0/AN0<──>│                │<──> RB6/PGC
+        RA1/AN1<──>│                │<──> RB5
+  RA2/AN2/VREF-<──>│                │<──> RB4
+  RA3/AN3/VREF+<──>│                │<──> RB3/PGM
+      RA4/T0CKI<──>│                │<──> RB2
+     RA5/AN4/SS<──>│                │<──> RB1
+     RE0/RD/AN5<──>│                │<──> RB0/INT
+     RE1/WR/AN6<──>│                │<──  VDD
+     RE2/CS/AN7<──>│   PIC16F874A   │<──  VSS
+             VDD──>│      /877A     │<──> RD7/PSP7
+             VSS──>│                │<──> RD6/PSP6
+     OSC1/CLKIN<──>│                │<──> RD5/PSP5
+     OSC2/CLKOUT<──│                │<──> RD4/PSP4
+RC0/T1OSO/T1CKI<──>│                │<──> RC7/RX/DT
+ RC1/T1OSI/CCP2<──>│                │<──> RC6/TX/CK
+       RC2/CCP1<──>│                │<──> RC5/SDO
+    RC3/SCK/SCL<──>│                │<──> RC4/SDI/SDA
+       RD0/PSP0<──>│                │<──> RD3/PSP3
+       RD1/PSP1<──>│                │<──> RD2/PSP2
+                   ╰────────────────╯
+```
+
+## PIC Programlama
+
+### Başlık
+- LIST: Kullanılan PIC tipini belirtmek için kullanılır. Bir derleyici
+  bildirisidir. Yani derleyici yönlendiren bir komuttur.
+- INCLUDE: Kütüphane ekleme komutu
+### Atama
+Bu bloğa gerekirse tanımlamalar yazılır;
+- `STATUS EQU 0x03`
+- `PORTB  EQU h'0006'`
+### Program
+
+#### Status Register
+
+```
+   7    6    5    4    3    2    1    0   <-- Bit
+╭─────┬────┬────┬────┬────┬────┬────┬─────╮
+│ IRP │RP1 │RP0 │ TO │ PD │ Z  │ DC │  C  │ <-- Görev
+╰─────┴────┴────┴────┴────┴────┴────┴─────╯
+  R/W  R/W  R/W    R   R    R/W  R/W  R/W
+   │     \   /     │   │     │    │    │
+   │      \ /      │   │     │    │    │
+   │       │       │   │     │    │    ╰──────> 8. bitten taşma ve ödünç
+   │       │       │   │     │    │             (carry/borrow) bitidir.
+   │       │       │   │     │    │             C = 0 ise taşma yoktur.
+   │       │       │   │     │    │             C = 1 ise taşma vardır.
+   │       │       │   │     │    │
+   │       │       │   │     │    ╰───────────> 4. bitten taşma ve ödünc
+   │       │       │   │     │                  (carry/borrow) biti.
+   │       │       │   │     │                  DC = 0 ise taşma yoktur.
+   │       │       │   │     │                  DC = 1 ise taşma vardır.
+   │       │       │   │     │
+   │       │       │   │     ╰────────────────> Sıfır (zero) biti
+   │       │       │   │                        Z = 0 ise sonuç sıfır
+   │       │       │   │                        değildir.
+   │       │       │   │                        Z = 1 ise sonuç sıfırdır.
+   │       │       │   │
+   │       │       │   ╰──────────────────────> Enerji kesilme (power-down)
+   │       │       │                            bitidir.
+   │       │       │                            PD = 0 ise uyku modundadır.
+   │       │       │                            PD = 1 PIC'e enerji verildi
+   │       │       │                            ve CLRWDT çalışınca
+   │       │       │
+   │       │       ╰──────────────────────────> Zaman aşım (time-out) biti
+   │       │                                    TO = 0 WDT'de zaman
+   │       │                                    dolunca.
+   │       │                                    TO = 1 PIC'e enerji verildi
+   │       │                                    ve CLRWDT ve SLEEP çalışınca.
+   │       │
+   │       ╰──────────────────────────────────> RPI:RP0 ikilisi bank seçme
+   │                                            bitleri
+   │                                            00 ise bank0 (00h-7Fh)
+   │                                            01 ise bank0 (80h-FFh)
+   │                                            10 ise bank0 (100h-17Fh)
+   │                                            11 ise bank0 (180h-1FFh)
+   │
+   ╰──────────────────────────────────────────> Indirekt adres için bank
+                                                seçme bitidir.
+                                                0 ise bank 0, 1(00h-FFh)
+                                                1 ise bank 2, 3(100h-1FFh)
+```
+
+### Sonuç bölümleri
+
+---
+### Örnek
+
+```
+
+     ╭───────────╮
+     │   Başla   │
+     ╰─────┬─────╯
+           │
+          \│/
+   ╭───────┴────────╮
+   │Port ayarlarını │
+   │Yap, TRISB çıkış│
+   │ayarla, PORTB'yi│
+   │sıfırla         │
+   ╰───────┬────────╯
+╭_________\│                               Gecikme yap
+│         /│                                   \│/
+│         \│/                           ╭───────┴────────╮
+│ ╭──────────────────╮                  │Hafızaya 255 yaz│
+│ │PORTB'in 0 bitini │                  ╰───────┬────────╯
+│ │1 yap gecikme yap │                          │
+│ │(yak)             │                ╭─────────┤
+│ ╰────────┬─────────╯                │        \│/
+│         \│/                         │ ╭───────┴────────╮
+│ ╭────────┴─────────╮                │ │Hafızayı 1 azalt│
+│ │PORTB'in 0 bitini │                │ ╰───────┬────────╯
+│ │0 yap gecikme yap │                │        \│/
+│ │(son)             │                │  H  ╭───┴─────╮
+│ ╰────────┬─────────╯                ╰─────┼Sıfır mı?│
+╰__________│                                ╰───┬─────╯
+          \│/                                   │ E
+                                               \│/
+     ╭───────────╮
+     │    Dur    │
+     ╰───────────╯
+```
+
 
